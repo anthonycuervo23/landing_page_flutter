@@ -1,30 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:landing_page_flutter/providers/page_provider.dart';
+import 'package:landing_page_flutter/router/router.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  //we can call Fluro here or we can do it as show
+  //Flurorouter.configureRoutes();
+  runApp(AppState());
 }
 
-class MyApp extends StatelessWidget {
+class AppState extends StatelessWidget {
+  const AppState({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: HomePage(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => PageProvider(),
+        ),
+      ],
+      child: MyApp(),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    Flurorouter.configureRoutes();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('New Screen'),
-      ),
-      body: Center(
-        child: Text('Hello World!'),
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Landing Page',
+      initialRoute: '/home',
+      onGenerateRoute: Flurorouter.router.generator,
     );
   }
 }
